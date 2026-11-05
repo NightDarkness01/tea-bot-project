@@ -2,13 +2,11 @@ import json
 import pandas as pd
 import random
 
-# 1. Загружаем ваш JSON
 with open('chinese-tea-dataset.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 df = pd.DataFrame(data['teas'])
 
-# 2. Словари для перевода категорий, кофеина и плотности
 category_map = {
     'Green Tea': 'Зелёный чай', 'Oolong Tea': 'Улун', 'Black Tea': 'Красный чай',
     'White Tea': 'Белый чай', 'Pu\'er Tea': 'Пуэр', 'Dark Tea': 'Тёмный чай',
@@ -20,7 +18,6 @@ body_map = {
     'medium-full': 'средне-полное', 'full': 'полное'
 }
 
-# 3. ПОЛНЫЙ словарь названий
 name_ru_map = {
     'Alishan High Mountain Oolong': 'Алишань Гаошань Улун',
     'Anji Bai Cha (Anji White Tea)': 'Аньцзи Бай Ча (Белый чай Аньцзи)',
@@ -160,7 +157,6 @@ name_ru_map = {
     'Wuzhen Green': 'Учжэнь Люй Ча'
 }
 
-# 4. РАСШИРЕННЫЙ Словарь для перевода вкусов (все пропущенные слова добавлены)
 flavor_map = {
     'floral': 'цветочный', 'butter': 'сливочный', 'cream': 'сливочный', 'creamy': 'сливочный',
     'umami': 'умами', 'chestnut': 'каштановый', 'bamboo': 'бамбук', 'melon': 'дыня',
@@ -195,14 +191,12 @@ def translate_flavors(flavor_str):
     parts = [p.strip() for p in flavor_str.split(',')]
     return ", ".join([flavor_map.get(p, p) for p in parts])
 
-# Применяем переводы
 df['category_ru'] = df['category'].map(category_map).fillna(df['category'])
 df['caffeine_ru'] = df['caffeine_level'].map(caffeine_map).fillna(df['caffeine_level'])
 df['body_ru'] = df['body'].map(body_map).fillna(df['body'])
 df['flavors_ru'] = df['flavor_primary'].apply(translate_flavors)
 df['name_ru'] = df['name_en'].apply(lambda x: name_ru_map.get(x, x))
 
-# 5. Логика генерации параметров заваривания
 def generate_brewing(row):
     cat = row['category']
     ox = row['oxidation_level']
@@ -237,7 +231,6 @@ def generate_brewing(row):
 
 df[['water_temp', 'steep_time', 'infusions']] = df.apply(generate_brewing, axis=1)
 
-# 6. Сохраняем итоговый файл
 final_cols = [
     'id', 'name_ru', 'name_zh', 'category_ru', 'caffeine_ru', 
     'body_ru', 'oxidation_level', 'flavors_ru', 
