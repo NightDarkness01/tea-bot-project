@@ -2,6 +2,8 @@ import json
 import pandas as pd
 import random
 
+random.seed(42)
+
 with open('chinese-tea-dataset.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
@@ -200,33 +202,54 @@ df['name_ru'] = df['name_en'].apply(lambda x: name_ru_map.get(x, x))
 def generate_brewing(row):
     cat = row['category']
     ox = row['oxidation_level']
-    
-    if 'Green' in cat or 'White' in cat or 'Yellow' in cat:
+
+    # Зелёный чай
+    if 'Green' in cat:
         temp = random.randint(75, 85)
-        time = random.randint(60, 90)
-        inf = random.randint(3, 4)
-    elif 'Oolong' in cat:
-        if ox < 0.4: 
-            temp = random.randint(85, 92)
-            time = random.randint(30, 45)
-            inf = random.randint(5, 6)
-        else: 
-            temp = random.randint(95, 100)
-            time = random.randint(20, 30)
-            inf = random.randint(6, 8)
-    elif 'Black' in cat:
-        temp = random.randint(90, 100)
+        time = random.randint(15, 30)
+        inf = random.randint(3, 5)
+
+    # Белый чай
+    elif 'White' in cat:
+        temp = random.randint(80, 90)
         time = random.randint(15, 30)
         inf = random.randint(4, 6)
+
+    # Жёлтый чай
+    elif 'Yellow' in cat:
+        temp = random.randint(75, 85)
+        time = random.randint(15, 30)
+        inf = random.randint(3, 5)
+
+    # Улун: учитываем степень окисления
+    elif 'Oolong' in cat:
+        if ox < 0.4:
+            temp = random.randint(85, 95)
+            time = random.randint(10, 20)
+            inf = random.randint(5, 8)
+        else:
+            temp = random.randint(95, 100)
+            time = random.randint(10, 20)
+            inf = random.randint(6, 10)
+
+    # Красный чай
+    elif 'Black' in cat:
+        temp = random.randint(90, 100)
+        time = random.randint(10, 20)
+        inf = random.randint(3, 5)
+
+    # Пуэр и тёмный чай
     elif 'Pu' in cat or 'Dark' in cat:
-        temp = 100
+        temp = random.randint(95, 100)
         time = random.randint(10, 20)
         inf = random.randint(8, 12)
+
+    # Ароматизированный чай и прочие категории
     else:
-        temp = 85
-        time = 60
-        inf = 4
-        
+        temp = random.randint(80, 90)
+        time = random.randint(20, 40)
+        inf = random.randint(3, 5)
+
     return pd.Series([temp, time, inf])
 
 df[['water_temp', 'steep_time', 'infusions']] = df.apply(generate_brewing, axis=1)
