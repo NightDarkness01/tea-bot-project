@@ -69,7 +69,7 @@ plt.tight_layout()
 plt.savefig("images/steeping_time.png")
 plt.show()
 
-# 4. Углублённый анализ температур (NumPy)
+# 4. Углублённый анализ температур
 temps = df["water_temp"].to_numpy()
 print("\n--- Анализ температур (NumPy) ---")
 print("Среднее:", np.mean(temps))
