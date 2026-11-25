@@ -45,8 +45,6 @@ stats = df.groupby("category_ru", as_index=False).agg(
 stats = stats.sort_values("mean_temp", ascending=False)
 print(stats.round(2))
 
-stats.to_csv("tea_stats_by_category.csv", index=False, encoding="utf-8-sig")
-
 plt.figure(figsize=(10, 5))
 plt.bar(stats["category_ru"], stats["mean_temp"])
 plt.title("Средняя температура заваривания по категориям")
@@ -110,4 +108,4 @@ corr_df = pd.DataFrame(
 )
 print(corr_df.round(2))
 
-print("\n✅ Анализ завершён. Графики сохранены в папку 'images'.")
+print("\nАнализ завершён. Графики сохранены в папку 'images'.")
