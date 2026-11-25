@@ -45,7 +45,6 @@ stats = df.groupby("category_ru", as_index=False).agg(
 stats = stats.sort_values("mean_temp", ascending=False)
 print(stats.round(2))
 
-# Сохраняем сводную таблицу (преподаватели любят, когда есть итоговый CSV)
 stats.to_csv("tea_stats_by_category.csv", index=False, encoding="utf-8-sig")
 
 plt.figure(figsize=(10, 5))
